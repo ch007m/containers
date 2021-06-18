@@ -2,10 +2,12 @@
 
 ### Maven container
 
-This project will add a new [cloud](./maven-jdk-adduser) user to the image. Why: As a pod don't launch a container using the `root` user, then we need
-a different user assigned to the `UID/GUID` 1000. Idally, the id and new user should be dynamically created using `gosub` or a mechanism similar.
+This project will add a new [cloud](./maven-jdk-adduser) user to the image. Why: As a pod should not start a container using the `root` user or security reasons, then we need
+to use a different `UID` (e.g. 1000).
 
 The image used as source is [csanchez/maven:3.8-openjdk-11](https://github.com/carlossg/docker-maven).
+
+**NOTE**: Ideally, the `UID` of the user should be added dynamically to the `/etc/password` file using `gosub`, `nss_wrapper` or a mechanism similar.
   
 ### Try to fix the UID issue
 
