@@ -1,14 +1,25 @@
 ## Containers
 
-### Root user of the Maven openjdk image 
+### Root user of the maven openjdk image 
 
-This project will add a new [cloud](./maven-jdk-adduser) user to the image. Why: As a pod should not start a container using the `root` user for security reasons, then we need
-to use a different `UID` (e.g. 1000). As the image used as source [csanchez/maven:3.8-openjdk-11](https://github.com/carlossg/docker-maven) owns all the files using `root` user, then it 
-must be extended to allow to use it on a kubernetes platform using a different user.
+All the files, part of the image [csanchez/maven:3.8-openjdk-11](https://github.com/carlossg/docker-maven), are owned by the `root` user. As docker runs locally
+a container using the `root` user, no particular problems will be raised n this case. 
+The situation is nevertheless different when the container is started using a different `UID`. Such a situation happens for a Kubernetes/Openshift deployment.
+When you will launch the container, then you will get the following `permission denied` error
+
+```shell script
+docker run -u 1000 --rm -it csanchez/maven:3.8-openjdk-11 /bin/bash
+mkdir: cannot create directory ‘/root’: Permission denied
+Can not write to /root/.m2/copy_reference_file.log. Wrong volume permissions? Carrying on ...
+```
+
+The objective of this project is to:
+- Add a new [user](./maven-jdk-adduser) to the image. 
+- Assign as the value `1000` to the `UID` and `GUID`
 
 **NOTE**: Ideally, the `UID` of the user should be added dynamically to the `/etc/password` file using `gosub`, `nss_wrapper` or a mechanism similar.
   
-### Try to fix the UID issue
+### Try to fix the UID dynamically
 
 The default user of the image `ubi8-openjdk` is the `jboss` user, which is assigned to the `UID` 185 and has as home folder `/home/jboss`.
 Unfortunately, we cannot start a container using a different UID (e.g 1000) as the user don t exist and will not be able to write files under `~/.ssh` folder by example.
@@ -25,6 +36,7 @@ bash: .bashrc: Permission denied
 [I have no name!@03bf088bb07d ~]$  mkdir ~/.ssh
 mkdir: cannot create directory ‘/home/jboss/.ssh’: Permission denied
 ```
+
 **NOTE**: A different `UID` is created by the kubernetes/OpenShift platform and should be equal to `1000` using the Jenkins Kubernetes plugin
 
 The following projects try to fix the problem without success !!!
