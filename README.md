@@ -17,7 +17,7 @@ Can not write to /root/.m2/copy_reference_file.log. Wrong volume permissions? Ca
 
 The objective of this project is to:
 - Add a new [user](./maven-jdk-adduser) to the image. 
-- Assign as the value `1000` to the `UID` and `GUID`
+- Assign as value `1000` to the `UID` and `GUID`
 
 **NOTE**: Ideally, the `UID` of the user should be added dynamically to the `/etc/password` file using `gosub`, `nss_wrapper` or a mechanism similar.
   
