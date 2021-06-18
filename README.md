@@ -60,23 +60,40 @@ drwxr-xr-x 2 cloud cloud   64 Jun 18 15:49 repository
   
 ### Try to fix the UID dynamically
 
-The default user of the image `ubi8-openjdk` is the `jboss` user, which is assigned to the `UID 185` and has as home folder `/home/jboss`.
-Unfortunately, we cannot start a container using a different UID (e.g 1000) as the user don t exist and will not be able to write files under `~/.ssh` folder by example.
+The default user of the image red hat `ubi8-openjdk` is the `jboss` user, which is assigned to the `UID 185` and has as home folder `/home/jboss`.
+If we start the container using a different UID (e.g 1000), then docker will report `I have no name!` as explained before.
+
+The user will be able to write files under the `/home/jboss/` or `~/.ssh` folder.
 
 ```shell script
-docker run -u 1000 --rm -it quay.io/snowdrop/openjdk11-git /bin/bash
+docker run --rm -it -u 1000 snowdrop/ubi8-openjdk11-git  /bin/bash
+id: cannot find name for user ID 1000
 
-[I have no name!@03bf088bb07d ~]$ id
+[I have no name!@3c8799973f59 ~]$ id
 uid=1000 gid=0(root) groups=0(root)
 
-[I have no name!@03bf088bb07d ~]$  echo "# Hello" >> .bashrc
-bash: .bashrc: Permission denied
+[I have no name!@3c8799973f59 ~]$ whoami
+whoami: cannot find name for user ID 1000: No such file or directory
 
-[I have no name!@03bf088bb07d ~]$  mkdir ~/.ssh
-mkdir: cannot create directory ‘/home/jboss/.ssh’: Permission denied
+[I have no name!@3c8799973f59 ~]$ pwd
+/home/jboss
+
+[I have no name!@3c8799973f59 ~]$ cat /etc/passwd | grep 1000
+
+[I have no name!@3c8799973f59 ~]$ mkdir -p ~/.ssh
+[I have no name!@3c8799973f59 ~]$ ls -la ~/
+total 36
+drwxrwx--- 1 jboss root 4096 Jun 18 16:18 .
+drwxr-xr-x 1 root  root 4096 Jun  2 14:39 ..
+-rw-r--r-- 1 jboss root   18 Apr 21 14:04 .bash_logout
+-rw-r--r-- 1 jboss root  141 Apr 21 14:04 .bash_profile
+-rw-r--r-- 1 jboss root  376 Apr 21 14:04 .bashrc
+drwxrwxr-x 2 jboss root 4096 Jun  2 14:50 .m2
+drwxr-xr-x 2  1000 root 4096 Jun 18 16:18 .ssh
+-rw-rw-r-- 1 root  root  584 Jun  2 14:39 passwd
 ```
 
-The following projects try to fix the problem but without success for the moment
+The following projects try to fix the problem by adding a new user (dynamically) ...
 
 - Changing [UID](./uid/) of the `UID` using `echo "${USER_NAME:-jboss}:x:$(id -u):0:${USER_NAME:-jboss} user:${HOME}:/sbin/nologin" >> /etc/passwd`
 - Using [gosu](./gosu/) tool to add a new user and next start the gosu executable

@@ -1,5 +1,5 @@
 CONTEXT = snowdrop
-IMAGE_NAME = openjdk11-git
+IMAGE_NAME = ubi8-openjdk11-git
 REGISTRY = quay.io
 
 all: build
