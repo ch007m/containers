@@ -76,9 +76,7 @@ bash: .bashrc: Permission denied
 mkdir: cannot create directory ‘/home/jboss/.ssh’: Permission denied
 ```
 
-**NOTE**: A different `UID` is created by the kubernetes/OpenShift platform and should be equal to `1000` using the Jenkins Kubernetes plugin
-
-The following projects try to fix the problem without success !!!
+The following projects try to fix the problem but without success for the moment
 
 - Changing [UID](./uid/) of the `UID` using `echo "${USER_NAME:-jboss}:x:$(id -u):0:${USER_NAME:-jboss} user:${HOME}:/sbin/nologin" >> /etc/passwd`
 - Using [gosu](./gosu/) tool to add a new user and next start the gosu executable
