@@ -2,10 +2,9 @@
 
 ### Maven container
 
-This project will add a new [cloud](./maven-jdk-adduser) user to the image. Why: As a pod should not start a container using the `root` user or security reasons, then we need
-to use a different `UID` (e.g. 1000).
-
-The image used as source is [csanchez/maven:3.8-openjdk-11](https://github.com/carlossg/docker-maven).
+This project will add a new [cloud](./maven-jdk-adduser) user to the image. Why: As a pod should not start a container using the `root` user for security reasons, then we need
+to use a different `UID` (e.g. 1000). As the image used as source [csanchez/maven:3.8-openjdk-11](https://github.com/carlossg/docker-maven) owns all the files using `root` user, then it 
+must be extended to allow to use it on a kubernetes platform where no root user is by default permitted.
 
 **NOTE**: Ideally, the `UID` of the user should be added dynamically to the `/etc/password` file using `gosub`, `nss_wrapper` or a mechanism similar.
   
