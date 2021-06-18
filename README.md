@@ -6,4 +6,4 @@
 
 ## Podman
 
-- Using [podman](./podman) - still nto working
+- Using [podman](./podman) with vagrant - still nto working
