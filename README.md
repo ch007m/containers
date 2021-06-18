@@ -3,8 +3,10 @@
 ### Root user of the maven openjdk image 
 
 All the files, part of the image [csanchez/maven:3.8-openjdk-11](https://github.com/carlossg/docker-maven), are owned by the `root` user. As docker runs locally
-a container using the `root` user, no particular problems will be raised n this case. 
-The situation is nevertheless different when the container is started using a different `UID`. Such a situation happens for a Kubernetes/Openshift deployment.
+a container using the `root` user, no particular problems will be raised in this case. 
+
+The situation is nevertheless different when you start the container using a different `UID` for the user. Such a case happens for a Kubernetes/OpenShift deployment.
+
 When you will launch the container, then you will get the following `permission denied` error
 
 ```shell script
