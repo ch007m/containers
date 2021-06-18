@@ -6,10 +6,11 @@ CURRENT_UID=${uid:-1000}
 
 # Notify user about the UID selected
 echo "Current UID : $CURRENT_UID"
+
 # Create user called "docker" with selected UID
-useradd --shell /bin/bash -u $CURRENT_UID -o -c "" -m docker
-# Set "HOME" ENV variable for user's home directory
-export HOME=/home/docker
+useradd -m -d /home/$LOCAL_USER_NAME -u $LOCAL_USER_ID $LOCAL_USER_NAME
+export HOME=/home/$LOCAL_USER_NAME
+export USER=$LOCAL_USER_NAME
 
 # Execute process
-exec /usr/local/bin/gosu docker "$@"
+exec gosu $LOCAL_USER_NAME "$@"
