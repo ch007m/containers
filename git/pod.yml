@@ -9,9 +9,7 @@ spec:
     runAsUser: 1000 #1000: default UID of jenkins user in default jnlp image
   containers:
     - name: maven3
-      image: quay.io/snowdrop/openjdk11-git
-      # image: registry.access.redhat.com/ubi8/openjdk-11 (FAILS -> No user exists for uid 1000 fatal: Could not read from remote repository.)
-      # image: quay.io/snowdrop/maven-openjdk11
+      image: quay.io/snowdrop/ubi8-openjdk11-git
       command:
       - cat
       tty: true

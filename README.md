@@ -58,7 +58,12 @@ drwxr-xr-x 2 cloud cloud   64 Jun 18 15:49 repository
 
 **NOTE**: Ideally, the `UID` of the user should be added dynamically to the `/etc/password` file using `gosub`, `nss_wrapper` or a mechanism similar.
   
-### Try to fix the UID dynamically
+### Add git to the red hat ubi8 openjdk11 image
+
+The red hat ubi8 openjdk11 image only packages: maven3, openjdk11, gpg but not at all git. This is why we have created this [project](./git)
+to extend the image
+
+### Jboss user 185 of the red hat ubi8 openjdk11 image
 
 The default user of the image red hat `ubi8-openjdk` is the `jboss` user, which is assigned to the `UID 185` and has as home folder `/home/jboss`.
 If we start the container using a different UID (e.g 1000), then docker will report `I have no name!` as explained before.
@@ -93,7 +98,9 @@ drwxr-xr-x 2  1000 root 4096 Jun 18 16:18 .ssh
 -rw-rw-r-- 1 root  root  584 Jun  2 14:39 passwd
 ```
 
-The following projects try to fix the problem by adding a new user (dynamically) ...
+### Assign dynamically the UID
+
+The following projects try to fix the problem by adding a new user dynamically
 
 - Changing [UID](./uid/) of the `UID` using `echo "${USER_NAME:-jboss}:x:$(id -u):0:${USER_NAME:-jboss} user:${HOME}:/sbin/nologin" >> /etc/passwd`
 - Using [gosu](./gosu/) tool to add a new user and next start the gosu executable
