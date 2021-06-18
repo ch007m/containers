@@ -2,8 +2,8 @@
 
 ### Build and push
 ```shell script
-cd uid/
-make build2
+cd uid/gosu
+make build
 ```
 
 ### Run
