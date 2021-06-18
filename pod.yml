@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+  labels:
+    app: my-pod
+spec:
+  securityContext:
+    runAsUser: 1000 #1000: default UID of jenkins user in default jnlp image
+  containers:
+    - name: maven3
+      image: quay.io/snowdrop/openjdk11-git
+      # image: registry.access.redhat.com/ubi8/openjdk-11 (FAILS -> No user exists for uid 1000 fatal: Could not read from remote repository.)
+      # image: quay.io/snowdrop/maven-openjdk11
+      command:
+      - cat
+      tty: true
