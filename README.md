@@ -105,7 +105,7 @@ drwxr-xr-x 2  1000 root 4096 Jun 18 16:18 .ssh
 ```
 
 Nevertheless, if we use this image to perform a `mvn prepare:release` responsible to push `git tags` to a git repository,
-then we will get the following error.
+then we will get the following `No user exists for uid 1000` error.
 ```shell script
 + git config core.sshCommand 'ssh -i ~/.ssh/id_rsa -vT'
 + git config user.name ****
