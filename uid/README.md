@@ -2,6 +2,7 @@
 
 ### Build and push
 ```shell script
+cd uid/
 make build2
 ```
 
@@ -9,4 +10,7 @@ make build2
 
 ```shell script
 docker run -u 1000 --rm -it quay.io/snowdrop/openjdk11-git /bin/bash
+Current UID : 1000
+useradd: Permission denied.
+useradd: cannot lock /etc/passwd; try again later.
 ```
