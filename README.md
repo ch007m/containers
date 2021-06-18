@@ -15,13 +15,18 @@ root@4d03987e2ece:/# pwd
 /
 ```
 
-The situation is nevertheless different when you start the container using a different `UID` for the user. Such a case happens for a Kubernetes/OpenShift deployment or when you would like for security reasons
-use a non-root user.
+The situation is nevertheless different when you start the container using a different `UID` for the user.
+
+Such a case happens :
+- For a Kubernetes/OpenShift deployment
+- When you would like, for security reasons, use a `non-root` user.
 
 When you will launch the container, then you will get the following `permission denied` and `I have no name` errors.
+Docker reports `I have no name!` as no user`1000` exists within the passwd file. The `Permission denied` error is due to the fact that
+docker cannot access on my laptop the `/root` folder.
 
 ```shell script
- docker run -u 1000 --rm -it -v ~/temp/root/.m2:/home/cloud/.m2 csanchez/maven:3.8-openjdk-11 /bin/bash
+docker run -u 1000 --rm -it -v ~/temp/root/.m2:/home/cloud/.m2 csanchez/maven:3.8-openjdk-11 /bin/bash
 mkdir: cannot create directory ‘/root’: Permission denied
 Can not write to /root/.m2/copy_reference_file.log. Wrong volume permissions? Carrying on ...
 
@@ -29,14 +34,10 @@ I have no name!@66e6258725f5:/$ cat /etc/passwd | grep 1000
 I have no name!@66e6258725f5:/$ 
 ```
 
-**NOTE**: docker reports `I have no name!` as no user`1000` exists within the passwd file.
-
 The objective of this project is to:
 - Add a non-root [user](./maven-jdk-adduser) to the image,
 - Assign the value `1000` to the `UID` and `GUID`,
 - Fix the `permissions denied` error on `/root`
-
-**NOTE**: Ideally, the `UID` of the user should be added dynamically to the `/etc/password` file using `gosub`, `nss_wrapper` or a mechanism similar.
 
 With the new image, we can run a container using the `UID` 
 
@@ -54,10 +55,12 @@ drwxr-xr-x 1 cloud cloud 4096 Jun 18 16:06 ..
 drwxr-xr-x 2 cloud cloud   64 Jun 18 15:49 repository
 -rw-r--r-- 1 cloud cloud  327 Jun 18 16:06 settings-docker.xml
 ```
+
+**NOTE**: Ideally, the `UID` of the user should be added dynamically to the `/etc/password` file using `gosub`, `nss_wrapper` or a mechanism similar.
   
 ### Try to fix the UID dynamically
 
-The default user of the image `ubi8-openjdk` is the `jboss` user, which is assigned to the `UID` 185 and has as home folder `/home/jboss`.
+The default user of the image `ubi8-openjdk` is the `jboss` user, which is assigned to the `UID 185` and has as home folder `/home/jboss`.
 Unfortunately, we cannot start a container using a different UID (e.g 1000) as the user don t exist and will not be able to write files under `~/.ssh` folder by example.
 
 ```shell script
