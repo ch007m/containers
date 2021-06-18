@@ -1,5 +1,5 @@
 CONTEXT = snowdrop
-IMAGE_NAME = openjdk11-git
+IMAGE_NAME = openjdk11-git-gosu
 REGISTRY = quay.io
 USERNAME ?= iocanel
 
