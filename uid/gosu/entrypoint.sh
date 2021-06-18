@@ -8,7 +8,8 @@ CURRENT_UID=${uid:-1000}
 echo "Current UID : $CURRENT_UID"
 
 # Create user called "docker" with selected UID
-useradd -m -d /home/$LOCAL_USER_NAME -u $LOCAL_USER_ID $LOCAL_USER_NAME
+# useradd -m -d /home/$LOCAL_USER_NAME -u $CURRENT_UID $LOCAL_USER_NAME
+useradd --shell /bin/bash -u $CURRENT_UID -o -c "" -m $LOCAL_USER_NAME
 export HOME=/home/$LOCAL_USER_NAME
 export USER=$LOCAL_USER_NAME
 
