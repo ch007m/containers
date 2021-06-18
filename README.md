@@ -5,21 +5,55 @@
 All the files, part of the image [csanchez/maven:3.8-openjdk-11](https://github.com/carlossg/docker-maven), are owned by the `root` user. As docker runs locally
 a container using the `root` user, no particular problems will be raised in this case. 
 
-The situation is nevertheless different when you start the container using a different `UID` for the user. Such a case happens for a Kubernetes/OpenShift deployment.
-
-When you will launch the container, then you will get the following `permission denied` error
-
 ```shell script
-docker run -u 1000 --rm -it csanchez/maven:3.8-openjdk-11 /bin/bash
-mkdir: cannot create directory ‘/root’: Permission denied
-Can not write to /root/.m2/copy_reference_file.log. Wrong volume permissions? Carrying on ...
+docker run --rm -it -v ~/temp/root/.m2:/home/cloud/.m2 csanchez/maven:3.8-openjdk-11 /bin/bash
+root@4d03987e2ece:/# id
+uid=0(root) gid=0(root) groups=0(root)
+root@4d03987e2ece:/# whoami
+root
+root@4d03987e2ece:/# pwd
+/
 ```
 
+The situation is nevertheless different when you start the container using a different `UID` for the user. Such a case happens for a Kubernetes/OpenShift deployment or when you would like for security reasons
+use a non-root user.
+
+When you will launch the container, then you will get the following `permission denied` and `I have no name` errors.
+
+```shell script
+ docker run -u 1000 --rm -it -v ~/temp/root/.m2:/home/cloud/.m2 csanchez/maven:3.8-openjdk-11 /bin/bash
+mkdir: cannot create directory ‘/root’: Permission denied
+Can not write to /root/.m2/copy_reference_file.log. Wrong volume permissions? Carrying on ...
+
+I have no name!@66e6258725f5:/$ cat /etc/passwd | grep 1000
+I have no name!@66e6258725f5:/$ 
+```
+
+**NOTE**: docker reports `I have no name!` as no user`1000` exists within the passwd file.
+
 The objective of this project is to:
-- Add a new [user](./maven-jdk-adduser) to the image. 
-- Assign as value `1000` to the `UID` and `GUID`
+- Add a non-root [user](./maven-jdk-adduser) to the image,
+- Assign the value `1000` to the `UID` and `GUID`,
+- Fix the `permissions denied` error on `/root`
 
 **NOTE**: Ideally, the `UID` of the user should be added dynamically to the `/etc/password` file using `gosub`, `nss_wrapper` or a mechanism similar.
+
+With the new image, we can run a container using the `UID` 
+
+```shell script
+docker run --rm -it -v ~/temp/root/.m2:/home/cloud/.m2 snowdrop/maven-openjdk11-adduser /bin/bash
+cloud@63d38875f442:/$ id
+uid=1000(cloud) gid=1000(cloud) groups=1000(cloud)
+cloud@63d38875f442:/$ whoami
+cloud
+ls -la /home/cloud/.m2/
+total 12
+drwxr-xr-x 5 cloud cloud  160 Jun 18 15:49 .
+drwxr-xr-x 1 cloud cloud 4096 Jun 18 16:06 ..
+-rw-r--r-- 1 cloud cloud  270 Jun 18 16:06 copy_reference_file.log
+drwxr-xr-x 2 cloud cloud   64 Jun 18 15:49 repository
+-rw-r--r-- 1 cloud cloud  327 Jun 18 16:06 settings-docker.xml
+```
   
 ### Try to fix the UID dynamically
 

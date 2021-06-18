@@ -1,5 +1,5 @@
 CONTEXT = snowdrop
-IMAGE_NAME = maven-openjdk11
+IMAGE_NAME = maven-openjdk11-adduser
 REGISTRY = quay.io
 
 all: build
@@ -9,6 +9,3 @@ build:
 
 push:
 	docker push ${REGISTRY}/${CONTEXT}/${IMAGE_NAME}
-
-clean:
-	rm -f build
