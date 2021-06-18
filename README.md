@@ -104,6 +104,42 @@ drwxr-xr-x 2  1000 root 4096 Jun 18 16:18 .ssh
 -rw-rw-r-- 1 root  root  584 Jun  2 14:39 passwd
 ```
 
+Nevertheless, if we use this image to perform a `mvn prepare:release` responsible to push `git tags` to a git repository,
+then we will get the following error.
+```shell script
++ git config core.sshCommand 'ssh -i ~/.ssh/id_rsa -vT'
++ git config user.name ****
++ git config user.email ****@redhat.com
++ echo Hello
++ git commit -m 'This is a new test' -a
+[main b5693c4] This is a new test
+ 1 file changed, 1 insertion(+)
++ GIT_CURL_VERBOSE=1
++ GIT_TRACE=1
++ git push -u origin main
+13:46:03.819498 git.c:442               trace: built-in: git push -u origin main
+13:46:03.819796 run-command.c:663       trace: run_command: unset GIT_PREFIX; 'ssh -i ~/.ssh/id_rsa -vT' git@github.com 'git-receive-pack '\''snowdrop/test.git'\'''
+No user exists for uid 1000
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+```
+This problem occurs as the user `1000` don't exist under `/home/1000` when ssh executes the remote session with the git server.
+As you can see hereafter, `/home/jboss` is the home folder of the container.
+```shell script
++ ls -la /home/jboss
+total 20
+drwxrwx--- 1 jboss root  36 Jun 17 13:45 .
+drwxr-xr-x 1 root  root  34 Jun 17 13:45 ..
+-rw-r--r-- 1 jboss root  18 Apr 21 14:04 .bash_logout
+-rw-r--r-- 1 jboss root 141 Apr 21 14:04 .bash_profile
+-rw-r--r-- 1 jboss root 376 Apr 21 14:04 .bashrc
+-rw-r--r-- 1  1000 root  26 Jun 17 13:45 .gitconfig
+drwxrwxr-x 2 jboss root  26 Jun  2 14:50 .m2
+drwx------ 2  1000 root  57 Jun 17 13:45 .ssh
+```
+
 ## Assign dynamically the UID
 
 The following projects try to fix the problem by adding a new user dynamically
