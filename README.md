@@ -104,8 +104,14 @@ drwxr-xr-x 2  1000 root 4096 Jun 18 16:18 .ssh
 -rw-rw-r-- 1 root  root  584 Jun  2 14:39 passwd
 ```
 
-Nevertheless, if we use this image to perform a `mvn prepare:release` responsible to push `git tags` to a git repository,
-then we will get the following `No user exists for uid 1000` error.
+If you launch a container using a kubernetes pod and the ubi8-openjdk image, then the following command `git config --global http.sslVerify false` will raise this error
+```shell script
+git config --global http.sslVerify false
+error: could not lock config file /home/jboss/.gitconfig: Permission denied
+```
+
+Again, that will also fail if we execute a `git tags/push` which is executed by the `mvn prepare:release` goal.
+Then, the following `No user exists for uid 1000` error will be reported.
 ```shell script
 + git config core.sshCommand 'ssh -i ~/.ssh/id_rsa -vT'
 + git config user.name ****
@@ -139,6 +145,8 @@ drwxr-xr-x 1 root  root  34 Jun 17 13:45 ..
 drwxrwxr-x 2 jboss root  26 Jun  2 14:50 .m2
 drwx------ 2  1000 root  57 Jun 17 13:45 .ssh
 ```
+
+**IMPORTANT**: Such a `git push` error is not reported if we use the `csanchez:maven8-openjdk11` image containing the `git` tool and where we use a user having as UID+GID `1000`
 
 ## Assign dynamically the UID
 
