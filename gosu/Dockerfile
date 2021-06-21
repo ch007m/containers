@@ -17,5 +17,4 @@ RUN wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/downloa
  && gosu nobody true
 
 COPY entrypoint.sh /usr/local/bin/adduser-and-run.sh
-RUN chmod +x /usr/local/bin/adduser-and-run.sh
 ENTRYPOINT ["/usr/local/bin/adduser-and-run.sh"]
