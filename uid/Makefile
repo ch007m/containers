@@ -1,6 +1,6 @@
+REGISTRY = quay.io
 CONTEXT = snowdrop
 IMAGE_NAME = ubi8-openjdk11-git-entrypoint
-REGISTRY = quay.io
 
 all: build
 

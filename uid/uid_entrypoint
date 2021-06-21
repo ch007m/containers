@@ -1,9 +1,8 @@
 #!/bin/sh
 if ! whoami &> /dev/null; then
-  echo "id: $(id -u)"
+  echo "Container UID: $(id -u)"
   if [ -w /etc/passwd ]; then
-    echo "${USER_NAME:-jboss}:x:$(id -u):0:${USER_NAME:-jboss} user:${HOME}:/sbin/nologin" >> /etc/passwd
+    echo "${USER_NAME:-jboss}:x:$(id -u):0:${USER_NAME:-jboss} user:/home/${USER_NAME}:/sbin/nologin" >> /etc/passwd
   fi
-  cat /etc/passwd
 fi
 exec "$@"

@@ -2,7 +2,7 @@
 
 ### Build and push
 ```shell script
-cd uid/gosu
+cd gosu
 make build
 ```
 
