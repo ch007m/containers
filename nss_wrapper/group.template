@@ -1,1 +1,1 @@
-users:x:${GROUP_ID}:
+${USER_NAME}:x:${GROUP_ID}:

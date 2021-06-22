@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: my-app
+  name: my-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      securityContext:
+        runAsUser: 1000
+      initContainers:
+        - name: nss-wrapper
+          image: localhost:5000/snowdrop/nss-wrapper
+          command: ['sh', '-c', '/usr/local/bin/nss_wrapper.sh']
+      containers:
+        - name: maven3
+          image: localhost:5000/snowdrop/ubi8-openjdk11-git
+          command:
+          - cat
+          tty: true

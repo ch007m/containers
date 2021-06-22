@@ -6,10 +6,11 @@ ENV USER=$USER_NAME
 ENV NSS_WRAPPER_PASSWD=/home/$USER_NAME/passwd
 ENV NSS_WRAPPER_GROUP=/home/$USER_NAME/group
 
-RUN mkdir -p /home/$USER \
-    && groupadd -r $USER -g 1000 \
-    && useradd -u 1000 -r -g $USER -m -d /home/$USER -s /sbin/nologin -c "Cloud user" $USER \
-    && chmod 755 /home/$USER \
-    && chown -R $USER:$USER /home/$USER
-
-USER $USER_NAME
+# RUN mkdir -p /home/$USER \
+#     && groupadd -r $USER -g 1000 \
+#     && useradd -u 1000 -r -g $USER -m -d /home/$USER -s /sbin/nologin -c "Cloud user" $USER \
+#     && chmod 755 /home/$USER \
+#     && chown -R $USER:$USER /home/$USER
+#
+#
+# USER $USER_NAME
