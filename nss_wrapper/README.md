@@ -3,7 +3,7 @@
 ### Build and push to a local docker repo (e.g. localhost:5000)
 ```shell script
 cd nss_wrapper
- make build && make push-local             
+make build && make push-local             
 ```
 
 ### Run
