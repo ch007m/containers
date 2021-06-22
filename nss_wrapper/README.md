@@ -8,7 +8,7 @@ cd nss_wrapper
 
 ### Run
 
-- Deploy the application having a nss_wrapper initContainer
+Deploy the application having a nss_wrapper initContainer
 ```shell script
 kubectl create ns demo
 kubectl -n demo apply -f dep.yml
@@ -16,6 +16,11 @@ kubectl -n demo apply -f dep.yml
 kubectl -n demo scale deployment/my-app --replicas=0
 kubectl -n demo scale deployment/my-app --replicas=1
 ```
+Error reported during initContainer execution
+```shell script
+/usr/local/bin/nss_wrapper.sh: line 16: /home/jboss/build.passwd: No such file or directory
+```
+
 
 To clean up
 ```shell script
