@@ -19,10 +19,22 @@ spec:
       initContainers:
         - name: nss-wrapper
           image: localhost:5000/snowdrop/nss-wrapper
-          command: ['sh', '-c', '/usr/local/bin/nss_wrapper.sh']
+          command: ['sh', '-c', '/nss_wrapper.sh']
+          env:
+            - name: USER_NAME
+              value: cloud
+          volumeMounts:
+            - name: shared-data
+              mountPath: /usr/share
       containers:
         - name: maven3
-          image: localhost:5000/snowdrop/ubi8-openjdk11-git
+          image: registry.access.redhat.com/ubi8/openjdk-11 #localhost:5000/snowdrop/ubi8-openjdk11-git
           command:
           - cat
           tty: true
+          volumeMounts:
+            - name: shared-data
+              mountPath: /usr/share
+      volumes:
+        - name: shared-data
+          emptyDir: { }

@@ -1,3 +1,4 @@
+# See: https://github.com/atbentley/docker-nss-wrapper
 FROM centos:centos7
 
 RUN yum install -y epel-release && \
@@ -5,17 +6,15 @@ RUN yum install -y epel-release && \
     yum install -y nss_wrapper gettext && \
     yum clean all -y
 
-# ENV USER_NAME=root
-#     NSS_WRAPPER_PASSWD=/tmp/passwd
-#     NSS_WRAPPER_GROUP=/tmp/group
-#
-# RUN touch ${NSS_WRAPPER_PASSWD} ${NSS_WRAPPER_GROUP} \
-#     && chgrp 0 ${NSS_WRAPPER_PASSWD} ${NSS_WRAPPER_GROUP} \
-#     && chmod g+rw ${NSS_WRAPPER_PASSWD} ${NSS_WRAPPER_GROUP}
+ENV USER_NAME=root \
+    NSS_WRAPPER_PASSWD=/usr/share/passwd \
+    NSS_WRAPPER_GROUP=/usr/share/group
 
-RUN mkdir -p /usr/local/share
-COPY passwd.template /usr/local/share/passwd.template
-# ADD group.template /group.template
-ADD nss_wrapper.sh /usr/local/bin/nss_wrapper.sh
+RUN touch ${NSS_WRAPPER_PASSWD} ${NSS_WRAPPER_GROUP} && \
+    chgrp 0 ${NSS_WRAPPER_PASSWD} ${NSS_WRAPPER_GROUP} && \
+    chmod g+rw ${NSS_WRAPPER_PASSWD} ${NSS_WRAPPER_GROUP}
 
-CMD ["/usr/local/bin/nss_wrapper.sh"]
+ADD passwd.template /passwd.template
+ADD nss_wrapper.sh /nss_wrapper.sh
+
+ENTRYPOINT ["/nss_wrapper.sh"]
