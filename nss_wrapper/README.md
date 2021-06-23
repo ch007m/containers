@@ -55,7 +55,8 @@ Next, ssh to the pod to make some tests.
 
 ### Test Result 
 
-Unfortunately the new UID is not configured as reported by the message `id: cannot find name for user ID 1000`
+Unfortunately the new UID is not configured as reported by the message `id: cannot find name for user ID 1000`.
+
 This is certainly due to the fact that the `run-java.sh` script was not executed.
 
 ```shell script
@@ -119,8 +120,10 @@ Nevertheless, the `ENV var substitution` is not taking place and by consequence 
 <<K9s-Shell>> Pod: demo/my-app-5c596fb5c6-427gd | Container: maven3
 [user@my-app-5c596fb5c6-427gd ~]$ id
 uid=1000(user) gid=0(root) groups=0(root)
+
 [user@my-app-5c596fb5c6-427gd ~]$ whoami
 user
+
 [user@my-app-5c596fb5c6-427gd ~]$ ls -la
 total 28
 drwxrwx--- 3  185 root 4096 Jun  2 14:50 .
@@ -130,6 +133,7 @@ drwxr-xr-x 1 root root 4096 Jun  2 14:39 ..
 -rw-r--r-- 1  185 root  376 Apr 21 14:04 .bashrc
 drwxrwxr-x 2  185 root 4096 Jun  2 14:50 .m2
 -rw-rw-r-- 1 root root  584 Jun  2 14:39 passwd
+
 [user@my-app-5c596fb5c6-427gd ~]$ cat $NSS_WRAPPER_PASSWD
 root:x:0:0:root:/root:/bin/bash
 bin:x:1:1:bin:/bin:/sbin/nologin
@@ -144,10 +148,9 @@ operator:x:11:0:operator:/root:/sbin/nologin
 games:x:12:100:games:/usr/games:/sbin/nologin
 ftp:x:14:50:FTP User:/var/ftp:/sbin/nologin
 nobody:x:99:99:Nobody:/:/sbin/nologin
-user:x:1000:0:user:/:/bin/bash[user@my-app-5c596fb5c6-427gd ~]$
+user:x:1000:0:user:/:/bin/bash
+
 [user@my-app-5c596fb5c6-427gd ~]$ git config --global http.sslVerify false
-[user@my-app-5c596fb5c6-427gd ~]$ git config -l'
-> ^C
 [user@my-app-5c596fb5c6-427gd ~]$ git config -l
 http.sslverify=false
 ```
