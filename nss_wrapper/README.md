@@ -1,5 +1,12 @@
 ## NSS_WRAPPER project
 
+  * [Prerequisite](#prerequisite)
+  * [Build and push to a local docker repo (e.g. localhost:5000) the nss_wrapper image](#build-and-push-to-a-local-docker-repo-eg-localhost5000-the-nss_wrapper-image)
+  * [Scenario 1 : Configure the ENV var of the nss_wrapper of the ubi8-openjdk11 image](#scenario-1--configure-the-env-var-of-the-nss_wrapper-of-the-ubi8-openjdk11-image)
+     * [Scenario 2: Use nss_wrapper as InitContainer](#scenario-2-use-nss_wrapper-as-initcontainer)
+  * [Sandbox: Run example of atbentley](#sandbox-run-example-of-atbentley)
+  * [To clean up](#to-clean-up)
+
 ## Prerequisite
 
 - Docker desktop
@@ -12,7 +19,7 @@ cd nss_wrapper
 make           
 ```
 
-### Configure the ENV var of the nss_wrapper of the ubi8-openjdk11 image
+## Scenario 1 : Configure the ENV var of the nss_wrapper of the ubi8-openjdk11 image
 
 The `ubi8-openjdk11` packages natively the `NSS_WRAPPER` lib which can be configured using the following ENV VARs
 ```
@@ -73,7 +80,7 @@ nobody:x:65534:65534:Kernel Overflow User:/:/sbin/nologin
 jboss:x:185:0:JBoss user:/home/jboss:/sbin/nologin
 ```
 
-### Use nss_wrapper as InitContainer
+### Scenario 2: Use nss_wrapper as InitContainer
 
 This project will create an `initContainer` executing an `init.sh` script
 able to populate using nss_wrapper the `build.passwd` file containing a 
@@ -137,7 +144,7 @@ drwxrwxr-x 2  185 root 4096 Jun 16 10:52 .m2
 -rw-r--r-- 1 user root    0 Jun 23 07:06 test
 ```
 
-### Run example of atbentley
+## Sandbox: Run example of atbentley
 
 Deploy the application having a nss_wrapper initContainer
 ```shell script
