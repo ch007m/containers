@@ -3,13 +3,14 @@ IMAGE_NAME = nss-wrapper
 REGISTRY = quay.io
 LOCAL_REGISTRY = localhost:5000
 
-all: build
+all: build build2 push-local
 
 build:
-	docker build -t ${LOCAL_REGISTRY}/${CONTEXT}/${IMAGE_NAME} -t ${REGISTRY}/${CONTEXT}/${IMAGE_NAME} -t ${CONTEXT}/${IMAGE_NAME} .
+	docker build -f Dockerfile1 -t ${LOCAL_REGISTRY}/${CONTEXT}/${IMAGE_NAME}:1 -t ${REGISTRY}/${CONTEXT}/${IMAGE_NAME}:1 -t ${CONTEXT}/${IMAGE_NAME}:1 .
 
-build-test:
-	docker build -f Dockerfile.test -t ${REGISTRY}/${CONTEXT}/${IMAGE_NAME}-test -t ${CONTEXT}/${IMAGE_NAME}-test .
+build2:
+	docker build -f Dockerfile2 -t ${LOCAL_REGISTRY}/${CONTEXT}/${IMAGE_NAME}:2 -t ${REGISTRY}/${CONTEXT}/${IMAGE_NAME}:2 -t ${CONTEXT}/${IMAGE_NAME}:2 .
 
 push-local:
-	docker push ${LOCAL_REGISTRY}/${CONTEXT}/${IMAGE_NAME}
+	docker push ${LOCAL_REGISTRY}/${CONTEXT}/${IMAGE_NAME}:1
+	docker push ${LOCAL_REGISTRY}/${CONTEXT}/${IMAGE_NAME}:2
