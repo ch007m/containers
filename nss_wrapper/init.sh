@@ -7,7 +7,6 @@ export USER_DESCRIPTION=${NSS_USER_DESCRIPTION:-Cloud}
 export USER_HOME=${NSS_USER_HOME:-/home/cloud}
 
 OUT_DIR=${NSS_DIR:-/tmp}
-echo "Output dir: ${NSS_DIR}"
 
 cp /usr/lib64/libnss_wrapper.so ${OUT_DIR}/libnss_wrapper.so
 envsubst < /usr/local/share/passwd.template > ${OUT_DIR}/build.passwd

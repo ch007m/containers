@@ -40,8 +40,12 @@ spec:
           command:
           - cat
           env:
-            - name: LD_PRELOAD
-              value: "/tmp/libnss_wrapper.so"
+           - name: LD_PRELOAD
+             value: libnss_wrapper.so
+           - name: NSS_WRAPPER_PASSWD
+             value: /tmp/build.passwd
+           - name: NSS_WRAPPER_GROUP
+             value: /etc/group
           tty: true
           volumeMounts:
             - name: shared-data
