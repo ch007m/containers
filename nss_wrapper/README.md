@@ -6,8 +6,9 @@
       * [Test Result](#test-result)
    * [Scenario 2: Use nss_wrapper as InitContainer](#scenario-2-use-nss_wrapper-as-initcontainer)
       * [Test Result](#test-result-1)
-   * [Sandbox: Run example of atbentley](#sandbox-run-example-of-atbentley)
    * [To clean up](#to-clean-up)
+   * [Deprecated: Run example of atbentley](#deprecated-run-example-of-atbentley)
+
 
 ## Prerequisite
 
@@ -155,9 +156,16 @@ user:x:1000:0:user:/:/bin/bash
 http.sslverify=false
 ```
 
-## Sandbox: Run example of atbentley
+## To clean up
+```shell script
+kubectl -n demo delete -f dep1.yml
+kubectl -n demo delete -f dep2.yml
+kubectl -n demo delete -f dep3.yml
+```
 
-Deploy the application having a nss_wrapper initContainer
+## Deprecated: Run example of atbentley
+
+Deploy the application using a nss_wrapper initContainer
 ```shell script
 kubectl create ns demo
 kubectl -n demo apply -f dep1.yml
@@ -168,11 +176,4 @@ kubectl -n demo scale deployment/my-app --replicas=1
 Error reported during initContainer execution
 ```shell script
 /usr/local/bin/nss_wrapper.sh: line 16: /home/jboss/build.passwd: No such file or directory
-```
-
-## To clean up
-```shell script
-kubectl -n demo delete -f dep1.yml
-kubectl -n demo delete -f dep2.yml
-kubectl -n demo delete -f dep3.yml
 ```
