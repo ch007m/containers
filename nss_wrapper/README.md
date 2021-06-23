@@ -11,7 +11,7 @@
 
 - Docker desktop
 - Kubernetes Kind cluster - [bash script to install and configure it](https://github.com/snowdrop/k8s-infra/blob/master/kind/kind-reg-ingress.sh)
-- Local Docker registry
+- Local Docker registry accessible at the address `localhost:5000`
 
 ## Build and push the image
 
@@ -48,8 +48,6 @@ kubectl -n demo apply -f dep3.yml
 kubectl -n demo scale deployment/my-app --replicas=0
 kubectl -n demo scale deployment/my-app --replicas=1
 ```
-
-**NOTE**: It is needed that a local docker registry is deployd on the cluster and accessible at the address: `localhost:5000`
 
 Next, ssh to the pod to make some tests. Unfortunately the new UID is not configured as the `run-java.sh` script was not executed.
 ```shell script
@@ -102,7 +100,6 @@ kubectl -n demo apply -f dep2.yml
 kubectl -n demo scale deployment/my-app --replicas=0
 kubectl -n demo scale deployment/my-app --replicas=1
 ```
-**NOTE**: It is needed that a local docker registry is deployd on the cluster and accessible at the address: `localhost:5000`
 
 What we observe is that now the `ENV var substitution` is not taking place and by consequence the user added within the `build.passwd` file is `user` and not `cloud`
 Otherwise, the id is well recognized.
