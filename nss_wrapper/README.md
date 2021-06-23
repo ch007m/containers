@@ -13,7 +13,16 @@
 - Kubernetes Kind cluster - [bash script to install and configure it](https://github.com/snowdrop/k8s-infra/blob/master/kind/kind-reg-ingress.sh)
 - Local Docker registry
 
-## Build and push to a local docker repo (e.g. localhost:5000) the nss_wrapper image
+## Build and push the image
+
+The make goal will build 2 images which have been designing using the following projects:
+- [syndesisio's nsswrapper](https://github.com/syndesisio/nsswrapper-glibc)
+- [atbentley's nss_wrapper](https://github.com/atbentley/docker-nss-wrapper/)
+
+**NOTE**: The syndesio's approach has been tested successfully - see [scenario 2](#scenario-2-use-nss_wrapper-as-initcontainer)
+
+Next, the images will be pushed to a local docker repo (e.g. localhost:5000)
+
 ```shell script
 cd nss_wrapper
 make           
