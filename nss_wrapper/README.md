@@ -1,5 +1,11 @@
 ## NSS_WRAPPER project
 
+## Prerequisite
+
+- Docker desktop
+- Kubernetes Kind cluster - [bash script to install and configure it](https://github.com/snowdrop/k8s-infra/blob/master/kind/kind-reg-ingress.sh)
+- Local Docker registry
+
 ## Build and push to a local docker repo (e.g. localhost:5000) the nss_wrapper image
 ```shell script
 cd nss_wrapper
