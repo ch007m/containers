@@ -23,9 +23,3 @@ spec:
           args:
             - sed -i 's/185/1000710000/g' passwd && cat
           tty: true
-          volumeMounts:
-            - name: shared-data
-              mountPath: /tmp
-      volumes:
-        - name: shared-data
-          emptyDir: { }
