@@ -9,7 +9,6 @@
    * [To clean up](#to-clean-up)
    * [Deprecated: Run example of atbentley](#deprecated-run-example-of-atbentley)
 
-
 ## Prerequisite
 
 - Docker desktop
@@ -46,7 +45,7 @@ The `ubi8-openjdk11` packages natively the `NSS_WRAPPER` lib which can be config
 To use it, deploy the following application on a k8s cluster 
 ```shell script
 kubectl create ns demo
-kubectl -n demo apply -f dep3.yml
+kubectl -n demo apply -f dep1.yml
 
 kubectl -n demo scale deployment/my-app --replicas=0
 kubectl -n demo scale deployment/my-app --replicas=1
@@ -56,9 +55,7 @@ Next, ssh to the pod to make some tests.
 
 ### Test Result 
 
-Unfortunately the new UID is not configured as reported by the message `id: cannot find name for user ID 1000`.
-
-This is certainly due to the fact that the `run-java.sh` script was not executed.
+id of the UID exists, and we can create a file such as `.gitconfig`
 
 ```shell script
 <<K9s-Shell>> Pod: demo/my-app-555948c5f-fptwf | Container: maven3
@@ -113,29 +110,18 @@ kubectl -n demo scale deployment/my-app --replicas=1
 
 ### Test Result
 
-The new UID is well recognized as no message is reported like during the scenario 1 execution.
+The new UID is well recognized as no message is reported like that was the case during the `scenario 1` execution.
 We can create a file under the path `/home/jboss`.
-Nevertheless, the `ENV var substitution` is not taking place and by consequence the user added within the `build.passwd` file is `user` and not `cloud`. To be investigated !!
 
 ```shell script
-<<K9s-Shell>> Pod: demo/my-app-5c596fb5c6-427gd | Container: maven3
-[user@my-app-5c596fb5c6-427gd ~]$ id
-uid=1000(user) gid=0(root) groups=0(root)
+<<K9s-Shell>> Pod: demo/my-app-84f5d99c49-fwxgt | Container: maven3
+[cloud@my-app-84f5d99c49-fwxgt ~]$ id
+uid=1000(cloud) gid=0(root) groups=0(root)
 
-[user@my-app-5c596fb5c6-427gd ~]$ whoami
-user
+[cloud@my-app-84f5d99c49-fwxgt ~]$ whoami
+cloud
 
-[user@my-app-5c596fb5c6-427gd ~]$ ls -la
-total 28
-drwxrwx--- 3  185 root 4096 Jun  2 14:50 .
-drwxr-xr-x 1 root root 4096 Jun  2 14:39 ..
--rw-r--r-- 1  185 root   18 Apr 21 14:04 .bash_logout
--rw-r--r-- 1  185 root  141 Apr 21 14:04 .bash_profile
--rw-r--r-- 1  185 root  376 Apr 21 14:04 .bashrc
-drwxrwxr-x 2  185 root 4096 Jun  2 14:50 .m2
--rw-rw-r-- 1 root root  584 Jun  2 14:39 passwd
-
-[user@my-app-5c596fb5c6-427gd ~]$ cat $NSS_WRAPPER_PASSWD
+[cloud@my-app-84f5d99c49-fwxgt ~]$ cat $NSS_WRAPPER_PASSWD
 root:x:0:0:root:/root:/bin/bash
 bin:x:1:1:bin:/bin:/sbin/nologin
 daemon:x:2:2:daemon:/sbin:/sbin/nologin
@@ -149,10 +135,10 @@ operator:x:11:0:operator:/root:/sbin/nologin
 games:x:12:100:games:/usr/games:/sbin/nologin
 ftp:x:14:50:FTP User:/var/ftp:/sbin/nologin
 nobody:x:99:99:Nobody:/:/sbin/nologin
-user:x:1000:0:user:/:/bin/bash
+cloud:x:1000:0:Cloud:/home/cloud:/bin/bash
 
-[user@my-app-5c596fb5c6-427gd ~]$ git config --global http.sslVerify false
-[user@my-app-5c596fb5c6-427gd ~]$ git config -l
+[cloud@my-app-84f5d99c49-fwxgt ~]$ git config --global http.sslVerify false
+[cloud@my-app-84f5d99c49-fwxgt ~]$ git config -l
 http.sslverify=false
 ```
 
@@ -168,7 +154,7 @@ kubectl -n demo delete -f dep3.yml
 Deploy the application using a nss_wrapper initContainer
 ```shell script
 kubectl create ns demo
-kubectl -n demo apply -f dep1.yml
+kubectl -n demo apply -f dep3.yml
 
 kubectl -n demo scale deployment/my-app --replicas=0
 kubectl -n demo scale deployment/my-app --replicas=1

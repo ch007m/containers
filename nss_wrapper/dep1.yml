@@ -16,25 +16,22 @@ spec:
     spec:
       securityContext:
         runAsUser: 1000
-      initContainers:
-        - name: nss-wrapper
-          image: localhost:5000/snowdrop/nss-wrapper:1
-          command: ['sh', '-c', '/nss_wrapper.sh']
-          env:
-            - name: USER_NAME
-              value: cloud
-          volumeMounts:
-            - name: shared-data
-              mountPath: /usr/share
       containers:
         - name: maven3
-          image: registry.access.redhat.com/ubi8/openjdk-11 #localhost:5000/snowdrop/ubi8-openjdk11-git
+          image: localhost:5000/snowdrop/ubi8-openjdk11-git
           command:
           - cat
+          env:
+           - name: LD_PRELOAD
+             value: libnss_wrapper.so
+           - name: NSS_WRAPPER_PASSWD
+             value: /home/jboss/passwd
+           - name: NSS_WRAPPER_GROUP
+             value: /etc/group
           tty: true
           volumeMounts:
             - name: shared-data
-              mountPath: /usr/share
+              mountPath: /tmp
       volumes:
         - name: shared-data
           emptyDir: { }

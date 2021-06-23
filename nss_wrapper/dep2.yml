@@ -19,6 +19,7 @@ spec:
       initContainers:
         - name: nss-wrapper
           image: localhost:5000/snowdrop/nss-wrapper:2
+          imagePullPolicy: Always
           command: ['sh', '-c', '/usr/local/bin/init.sh']
           env:
             - name: NSS_WRAPPER_PASSWD
