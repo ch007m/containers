@@ -1,11 +1,13 @@
 ## NSS_WRAPPER project
 
-  * [Prerequisite](#prerequisite)
-  * [Build and push to a local docker repo (e.g. localhost:5000) the nss_wrapper image](#build-and-push-to-a-local-docker-repo-eg-localhost5000-the-nss_wrapper-image)
-  * [Scenario 1 : Configure the ENV var of the nss_wrapper of the ubi8-openjdk11 image](#scenario-1--configure-the-env-var-of-the-nss_wrapper-of-the-ubi8-openjdk11-image)
-     * [Scenario 2: Use nss_wrapper as InitContainer](#scenario-2-use-nss_wrapper-as-initcontainer)
-  * [Sandbox: Run example of atbentley](#sandbox-run-example-of-atbentley)
-  * [To clean up](#to-clean-up)
+   * [Prerequisite](#prerequisite)
+   * [Build and push the image](#build-and-push-the-image)
+   * [Scenario 1 : Configure the ENV var of the nss_wrapper of the ubi8-openjdk11 image](#scenario-1--configure-the-env-var-of-the-nss_wrapper-of-the-ubi8-openjdk11-image)
+      * [Test Result](#test-result)
+      * [Scenario 2: Use nss_wrapper as InitContainer](#scenario-2-use-nss_wrapper-as-initcontainer)
+      * [Test Result](#test-result-1)
+   * [Sandbox: Run example of atbentley](#sandbox-run-example-of-atbentley)
+   * [To clean up](#to-clean-up)
 
 ## Prerequisite
 
@@ -49,7 +51,13 @@ kubectl -n demo scale deployment/my-app --replicas=0
 kubectl -n demo scale deployment/my-app --replicas=1
 ```
 
-Next, ssh to the pod to make some tests. Unfortunately the new UID is not configured as the `run-java.sh` script was not executed.
+Next, ssh to the pod to make some tests. 
+
+### Test Result 
+
+Unfortunately the new UID is not configured as reported by the message `id: cannot find name for user ID 1000`
+This is certainly due to the fact that the `run-java.sh` script was not executed.
+
 ```shell script
 <<K9s-Shell>> Pod: demo/my-app-555948c5f-fptwf | Container: maven3
 id: cannot find name for user ID 1000
@@ -101,27 +109,28 @@ kubectl -n demo scale deployment/my-app --replicas=0
 kubectl -n demo scale deployment/my-app --replicas=1
 ```
 
-What we observe is that now the `ENV var substitution` is not taking place and by consequence the user added within the `build.passwd` file is `user` and not `cloud`
-Otherwise, the id is well recognized.
+### Test Result
+
+The new UID is well recognized as no message is reported like during the scenario 1 execution.
+We can create a file under the path `/home/jboss`.
+Nevertheless, the `ENV var substitution` is not taking place and by consequence the user added within the `build.passwd` file is `user` and not `cloud`. To be investigated !!
+
 ```shell script
-<<K9s-Shell>> Pod: demo/my-app-fbc4c6dbb-8dp4c | Container: maven3
-id
+<<K9s-Shell>> Pod: demo/my-app-5c596fb5c6-427gd | Container: maven3
+[user@my-app-5c596fb5c6-427gd ~]$ id
 uid=1000(user) gid=0(root) groups=0(root)
-
-[user@my-app-f88959b7c-txj47 ~]$ whoami
+[user@my-app-5c596fb5c6-427gd ~]$ whoami
 user
-
-[user@my-app-f88959b7c-txj47 ~]$ ls -la
+[user@my-app-5c596fb5c6-427gd ~]$ ls -la
 total 28
-drwxrwx--- 3  185 root 4096 Jun 16 10:52 .
-drwxr-xr-x 1 root root 4096 Jun 16 10:51 ..
+drwxrwx--- 3  185 root 4096 Jun  2 14:50 .
+drwxr-xr-x 1 root root 4096 Jun  2 14:39 ..
 -rw-r--r-- 1  185 root   18 Apr 21 14:04 .bash_logout
 -rw-r--r-- 1  185 root  141 Apr 21 14:04 .bash_profile
 -rw-r--r-- 1  185 root  376 Apr 21 14:04 .bashrc
-drwxrwxr-x 2  185 root 4096 Jun 16 10:52 .m2
--rw-rw-r-- 1 root root  584 Jun 16 10:51 passwd
-
-[user@my-app-f88959b7c-txj47 ~]$ cat $NSS_WRAPPER_PASSWD
+drwxrwxr-x 2  185 root 4096 Jun  2 14:50 .m2
+-rw-rw-r-- 1 root root  584 Jun  2 14:39 passwd
+[user@my-app-5c596fb5c6-427gd ~]$ cat $NSS_WRAPPER_PASSWD
 root:x:0:0:root:/root:/bin/bash
 bin:x:1:1:bin:/bin:/sbin/nologin
 daemon:x:2:2:daemon:/sbin:/sbin/nologin
@@ -135,19 +144,12 @@ operator:x:11:0:operator:/root:/sbin/nologin
 games:x:12:100:games:/usr/games:/sbin/nologin
 ftp:x:14:50:FTP User:/var/ftp:/sbin/nologin
 nobody:x:99:99:Nobody:/:/sbin/nologin
-user:x:1000:0:user:/:/bin/bash
-
-[user@my-app-f88959b7c-txj47 ~]$ touch /home/jboss/test
-[user@my-app-f88959b7c-txj47 ~]$ ls -la /home/jboss
-total 32
-drwxrwx--- 1  185 root 4096 Jun 23 07:06 .
-drwxr-xr-x 1 root root 4096 Jun 16 10:51 ..
--rw-r--r-- 1  185 root   18 Apr 21 14:04 .bash_logout
--rw-r--r-- 1  185 root  141 Apr 21 14:04 .bash_profile
--rw-r--r-- 1  185 root  376 Apr 21 14:04 .bashrc
-drwxrwxr-x 2  185 root 4096 Jun 16 10:52 .m2
--rw-rw-r-- 1 root root  584 Jun 16 10:51 passwd
--rw-r--r-- 1 user root    0 Jun 23 07:06 test
+user:x:1000:0:user:/:/bin/bash[user@my-app-5c596fb5c6-427gd ~]$
+[user@my-app-5c596fb5c6-427gd ~]$ git config --global http.sslVerify false
+[user@my-app-5c596fb5c6-427gd ~]$ git config -l'
+> ^C
+[user@my-app-5c596fb5c6-427gd ~]$ git config -l
+http.sslverify=false
 ```
 
 ## Sandbox: Run example of atbentley
