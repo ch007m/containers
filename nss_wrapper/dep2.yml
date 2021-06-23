@@ -25,6 +25,12 @@ spec:
               value: "/tmp/build.passwd"
             - name: NSS_WRAPPER_GROUP
               value: '/etc/group'
+            - name: USER_NAME
+              value: cloud
+            - name: USER_DESCRIPTION
+              value: Cloud
+            - name: USER_HOME
+              value: /home/cloud
           volumeMounts:
             - name: shared-data
               mountPath: /tmp
