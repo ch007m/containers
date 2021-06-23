@@ -4,7 +4,7 @@
    * [Build and push the image](#build-and-push-the-image)
    * [Scenario 1 : Configure the ENV var of the nss_wrapper of the ubi8-openjdk11 image](#scenario-1--configure-the-env-var-of-the-nss_wrapper-of-the-ubi8-openjdk11-image)
       * [Test Result](#test-result)
-      * [Scenario 2: Use nss_wrapper as InitContainer](#scenario-2-use-nss_wrapper-as-initcontainer)
+   * [Scenario 2: Use nss_wrapper as InitContainer](#scenario-2-use-nss_wrapper-as-initcontainer)
       * [Test Result](#test-result-1)
    * [Sandbox: Run example of atbentley](#sandbox-run-example-of-atbentley)
    * [To clean up](#to-clean-up)
@@ -96,7 +96,7 @@ nobody:x:65534:65534:Kernel Overflow User:/:/sbin/nologin
 jboss:x:185:0:JBoss user:/home/jboss:/sbin/nologin
 ```
 
-### Scenario 2: Use nss_wrapper as InitContainer
+## Scenario 2: Use nss_wrapper as InitContainer
 
 This project will create an `initContainer` executing an `init.sh` script
 able to populate using nss_wrapper the `build.passwd` file containing a 
