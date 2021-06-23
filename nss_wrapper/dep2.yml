@@ -21,8 +21,6 @@ spec:
           image: localhost:5000/snowdrop/nss-wrapper:2
           command: ['sh', '-c', '/usr/local/bin/init.sh']
           env:
-            - name: LD_PRELOAD
-              value: "/tmp/libnss_wrapper.so"
             - name: NSS_WRAPPER_PASSWD
               value: "/tmp/build.passwd"
             - name: NSS_WRAPPER_GROUP
@@ -35,6 +33,9 @@ spec:
           image: registry.access.redhat.com/ubi8/openjdk-11 #localhost:5000/snowdrop/ubi8-openjdk11-git
           command:
           - cat
+          env:
+            - name: LD_PRELOAD
+              value: "/tmp/libnss_wrapper.so"
           tty: true
           volumeMounts:
             - name: shared-data

@@ -16,9 +16,17 @@ kubectl -n demo apply -f dep2.yml
 kubectl -n demo scale deployment/my-app --replicas=0
 kubectl -n demo scale deployment/my-app --replicas=1
 ```
-Error reported during initContainer execution
+We still got the same error message
 ```shell script
-NWRAP_ERROR[<unknown> (1)] - nwrap_files_cache_reload: Unable to open '/home/jboss/build.passwd' readonly -1:No such file or directory
+<<K9s-Shell>> Pod: demo/my-app-fbc4c6dbb-8dp4c | Container: maven3
+id: cannot find name for user ID 1000
+[I have no name!@my-app-fbc4c6dbb-8dp4c ~]$ ls -la /tmp
+total 72
+drwxrwxrwx 2 root root  4096 Jun 23 06:39 .
+drwxr-xr-x 1 root root  4096 Jun 23 06:39 ..
+-rw-r--r-- 1 1000 root   543 Jun 23 06:39 build.passwd
+-rwxr-xr-x 1 1000 root 57920 Jun 23 06:39 libnss_wrapper.so
+[I have no name!@my-app-fbc4c6dbb-8dp4c ~]$
 ```
 
 ### Run example of atbentley
